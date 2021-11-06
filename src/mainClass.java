@@ -1,5 +1,7 @@
+import javax.swing.*;
+
 public class mainClass {
     public static void main(String args[]){
-        System.out.println("Hello World!");
+        LoginForm loginForm = new LoginForm();
     }
 }

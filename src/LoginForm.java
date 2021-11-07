@@ -207,7 +207,6 @@ public class LoginForm extends JFrame {
         this.setUndecorated(true);
         this.setShape(new RoundRectangle2D.Double(0, 0, 400, 270, 30, 30));
         this.setTitle("Condominium Management Login");
-        this.setResizable(false);
         this.setSize(new Dimension(400, 270));
         this.setLayout(mainLayout);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

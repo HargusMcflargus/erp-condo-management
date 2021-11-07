@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
+import java.sql.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class LoginForm extends JFrame {
@@ -13,15 +11,27 @@ public class LoginForm extends JFrame {
     private JLabel windowTitle, usernameLabel, passwordLabel;
     private JButton loginButton, closeButton;
     private SpringLayout mainLayout;
-
     //Constructor
     LoginForm(){
 
+        String databaseURL = "jdbc:ucanaccess://C://Users//hargus//Documents//db.mdb";
+        try(Connection connection = DriverManager.getConnection(databaseURL)){
+            String sql  = "SELECT * FROM test;";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                System.out.println(resultSet.getString("Name"));
+            }
+        }catch (java.sql.SQLException e){
+            e.printStackTrace();
+        }
         //Component Initialization
 
         //Text Fields
-        usernameField = new JTextField();
-        passwordField = new JPasswordField();
+        usernameField = new JTextField(null, 15);
+        usernameField.setFont(new Font(usernameField.getFont().toString(), Font.PLAIN, 15));
+        passwordField = new JPasswordField(15);
+        passwordField.setFont(new Font(passwordField.getFont().toString(), Font.PLAIN, 15));
 
         //Labels
         windowTitle = new JLabel("Log In");
@@ -37,15 +47,10 @@ public class LoginForm extends JFrame {
         //Close Button Properties
         ImageIcon imageIcon = new ImageIcon("res/close_Icon.png");
         Image image = imageIcon.getImage();
-        Image newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
+        Image newimg = image.getScaledInstance(15, 20,  java.awt.Image.SCALE_SMOOTH);
         closeButton = new JButton("", new ImageIcon(newimg));
         closeButton.setBackground(Color.RED);
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        closeButton.addActionListener(e -> dispose());
 
         //Layout Managers
         mainLayout = new SpringLayout();
@@ -56,9 +61,14 @@ public class LoginForm extends JFrame {
         this.add(usernameLabel);
         this.add(passwordLabel);
         this.add(closeButton);
+        this.add(usernameField);
+        this.add(passwordField);
 
         //Set Constraints
-        //windowTitle Top Constraint
+
+        ////////////////////////////////
+        /////windowTitle Constraint/////
+        ////////////////////////////////
         mainLayout.putConstraint(
                 SpringLayout.NORTH,
                 windowTitle,
@@ -66,7 +76,6 @@ public class LoginForm extends JFrame {
                 SpringLayout.NORTH,
                 this
         );
-        //windowTitle Left Constraint
         mainLayout.putConstraint(
                 SpringLayout.HORIZONTAL_CENTER,
                 windowTitle,
@@ -74,7 +83,10 @@ public class LoginForm extends JFrame {
                 SpringLayout.HORIZONTAL_CENTER,
                 this.getContentPane()
         );
-        //usernameLabel Left Constraints
+
+        ///////////////////////////////////
+        /////usernameLabel Constraints/////
+        ///////////////////////////////////
         mainLayout.putConstraint(
                 SpringLayout.WEST,
                 usernameLabel,
@@ -82,7 +94,6 @@ public class LoginForm extends JFrame {
                 SpringLayout.WEST,
                 this
         );
-        //usernameLabel Top Constraints
         mainLayout.putConstraint(
                 SpringLayout.NORTH,
                 usernameLabel,
@@ -90,7 +101,28 @@ public class LoginForm extends JFrame {
                 SpringLayout.SOUTH,
                 windowTitle
         );
-        //passwordLabel Left Constraint
+
+        ////////////////////////////////
+        /////Userfield Constraints//////
+        ////////////////////////////////
+        mainLayout.putConstraint(
+                SpringLayout.VERTICAL_CENTER,
+                usernameField,
+                5,
+                SpringLayout.VERTICAL_CENTER,
+                usernameLabel
+        );
+        mainLayout.putConstraint(
+                SpringLayout.WEST,
+                usernameField,
+                15,
+                SpringLayout.EAST,
+                usernameLabel
+        );
+
+        //////////////////////////////////////
+        /////passwordLabel Left Constraint////
+        //////////////////////////////////////
         mainLayout.putConstraint(
                 SpringLayout.WEST,
                 passwordLabel,
@@ -98,7 +130,6 @@ public class LoginForm extends JFrame {
                 SpringLayout.WEST,
                 usernameLabel
         );
-        //passwordLabel Top Constraint
         mainLayout.putConstraint(
                 SpringLayout.NORTH,
                 passwordLabel,
@@ -106,7 +137,28 @@ public class LoginForm extends JFrame {
                 SpringLayout.SOUTH,
                 usernameLabel
         );
-        //close Button Top Constraint
+
+        //////////////////////////////////////
+        /////Passwordfield Top Constrains/////
+        //////////////////////////////////////
+        mainLayout.putConstraint(
+                SpringLayout.VERTICAL_CENTER,
+                passwordField,
+                5,
+                SpringLayout.VERTICAL_CENTER,
+                passwordLabel
+        );
+        mainLayout.putConstraint(
+                SpringLayout.WEST,
+                passwordField,
+                20,
+                SpringLayout.EAST,
+                passwordLabel
+        );
+
+        /////////////////////////////////
+        /////close Button Constraint/////
+        /////////////////////////////////
         mainLayout.putConstraint(
                 SpringLayout.NORTH,
                 closeButton,
@@ -114,7 +166,6 @@ public class LoginForm extends JFrame {
                 SpringLayout.NORTH,
                 this
         );
-        //close Button Right constraint
         mainLayout.putConstraint(
                 SpringLayout.EAST,
                 closeButton,
@@ -122,6 +173,7 @@ public class LoginForm extends JFrame {
                 SpringLayout.EAST,
                 this.getContentPane()
         );
+        //////////////////////////////
 
         //JFrame Essentials
         this.getContentPane().setBackground(Color.decode(mainClass.color_1));

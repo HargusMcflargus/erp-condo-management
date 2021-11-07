@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.sql.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class LoginForm extends JFrame {
@@ -11,21 +10,18 @@ public class LoginForm extends JFrame {
     private JLabel windowTitle, usernameLabel, passwordLabel;
     private JButton loginButton, closeButton;
     private SpringLayout mainLayout;
+    private Database database;
+
     //Constructor
     LoginForm(){
+        //Component Initialization
 
-        String databaseURL = "jdbc:ucanaccess://C://Users//hargus//Documents//db.mdb";
-        try(Connection connection = DriverManager.getConnection(databaseURL)){
-            String sql  = "SELECT * FROM test;";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-            while (resultSet.next()){
-                System.out.println(resultSet.getString("Name"));
-            }
+        //Database
+        try{
+            database = new Database();
         }catch (java.sql.SQLException e){
             e.printStackTrace();
         }
-        //Component Initialization
 
         //Text Fields
         usernameField = new JTextField(null, 15);
@@ -43,6 +39,19 @@ public class LoginForm extends JFrame {
 
         //Buttons
         loginButton = new JButton("Log In");
+        loginButton.setBackground(Color.decode(mainClass.color_2));
+        loginButton.setFont(new Font(loginButton.getFont().toString(), Font.PLAIN, 15));
+        loginButton.setForeground(Color.white);
+        loginButton.addActionListener(e->{
+            loginButton.setForeground(Color.BLACK);
+            try{
+                if(database.verifyuser(usernameField.getText(), passwordField.getPassword())){
+                    logIn(usernameField.getText());
+                }
+            } catch (java.sql.SQLException error){
+                error.printStackTrace();
+            }
+        });
 
         //Close Button Properties
         ImageIcon imageIcon = new ImageIcon("res/close_Icon.png");
@@ -55,7 +64,6 @@ public class LoginForm extends JFrame {
         //Layout Managers
         mainLayout = new SpringLayout();
 
-
         //Adding components to JFrame
         this.add(windowTitle);
         this.add(usernameLabel);
@@ -63,6 +71,7 @@ public class LoginForm extends JFrame {
         this.add(closeButton);
         this.add(usernameField);
         this.add(passwordField);
+        this.add(loginButton);
 
         //Set Constraints
 
@@ -173,6 +182,24 @@ public class LoginForm extends JFrame {
                 SpringLayout.EAST,
                 this.getContentPane()
         );
+
+        /////////////////////////////////
+        /////Login Button Constraint/////
+        /////////////////////////////////
+        mainLayout.putConstraint(
+                SpringLayout.NORTH,
+                loginButton,
+                20,
+                SpringLayout.SOUTH,
+                passwordLabel
+        );
+        mainLayout.putConstraint(
+                SpringLayout.HORIZONTAL_CENTER,
+                loginButton,
+                0,
+                SpringLayout.HORIZONTAL_CENTER,
+                this.getContentPane()
+        );
         //////////////////////////////
 
         //JFrame Essentials
@@ -186,5 +213,11 @@ public class LoginForm extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    //Login Method
+    private void logIn(String user){
+        //Do Something
+        //Show dashboard
     }
 }

@@ -1,5 +1,6 @@
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
+import java.util.Arrays;
 
 public class Database {
     private String databaseURL;
@@ -27,6 +28,9 @@ public class Database {
         preparedStatement.setString(1, username);
         preparedStatement.setString(2, String.valueOf(password));
         ResultSet resultSet = preparedStatement.executeQuery();
-        return resultSet.next();
+        if (resultSet.next()){
+            return true;
+        }
+        return false;
     }
 }
